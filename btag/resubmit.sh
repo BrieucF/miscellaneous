@@ -31,6 +31,6 @@ for fileWithError in $filesWithError; do
             echo "      Will though not resubmit the job, use 'submit' option to do so"
         fi
     else
-        echo "      Normal since file does not exists"
+        echo "      Normal since file does not exist"
     fi
 done
