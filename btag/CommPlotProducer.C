@@ -480,45 +480,74 @@ double CommPlotProducer::GetEvtWeight(){
    
 }
 
-void CommPlotProducer::Loop(int trigger, float PtMin_Cut, float PtMax_Cut, TString output_name)
-{
-    // if not specified : run on single jet trigger
-    Loop("jet",trigger,PtMin_Cut,PtMax_Cut,output_name, "");
-}
+//void CommPlotProducer::Loop(int trigger, float PtMin_Cut, float PtMax_Cut, TString output_name)
+//{
+//    // if not specified : run on single jet trigger
+//    Loop("jet",trigger,PtMin_Cut,PtMax_Cut,output_name, "", "");
+//}
 
-void CommPlotProducer::Loop(TString trigname, int trigger, float PtMin_Cut, float PtMax_Cut, TString output_name, TString PUreweightingFileName) // if  PUreweightingFileName == "" --> no PU reweighting
+void CommPlotProducer::Loop(TString trigname, int trigger, float PtMin_Cut, float PtMax_Cut, TString output_name, TString puRewFileName, bool officalRecipe) // if  PUreweightingFileName == "" --> no PU reweighting
 { 
   
     // Prepare for PU reweighting 
     // This is exactly what SetPV() was doing but I moved it inside the Loop function
     cout << "before SetPV" << endl;
-    if (!isData && PUreweightingFileName != ""){
+    if (!isData && puRewFileName != ""){
         cout << "Start PU reweighting" << endl;
-        vector<float> mc_vect;
-        vector<float> data_vect;
-        puweight=false;
-      
-        TFile *filepuest = new TFile(PUreweightingFileName);
-        //TFile *filepuest = new TFile("/home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/inclusiveQCD_ptBin15to300_star1_TrigPFjet40_Jet60_250_notPUReweighted_goldenJSON/inclusiveQCD_ptBin15to300_star1_TrigPFjet40_Jet60_250_notPUReweighted_goldenJSON.root");
-        //TFile *filepuest = new TFile("/home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/muEnQCD_ptBin20to300_star1_TrigDijet20_Jet60_250_notPUReweighted_goldenJSON/muEnQCD_ptBin20to300_star1_TrigDijet20_Jet60_250_notPUReweighted_goldenJSON.root");
-        TH1D* npu_mc= (TH1D*) filepuest->Get("nPV_mc_unw");
-        TH1D* npu_dat= (TH1D*) filepuest->Get("nPV_data");
-        cout << "Got file PU histo" << endl;
-        
-        float n_integral_mc = npu_mc->Integral();
-        float n_integral_da = npu_dat->Integral();
-        npu_mc->Scale(1./n_integral_mc);
-        npu_dat->Scale(1./n_integral_da);
+        if (officalRecipe){
 
-        cout << "Before loop" << endl;
-        for (int i=0; i<60; i++){
-            mc_vect.push_back(npu_mc->GetBinContent(i+1));
-            data_vect.push_back(npu_dat->GetBinContent(i+1));
+            Double_t Spring2016[60] = { 0.000829312873542, 0.00124276120498, 0.00339329181587, 0.00408224735376, 0.00383036590008, 0.00659159288946, 0.00816022734493,
+            0.00943640833116, 0.0137777376066, 0.017059392038, 0.0213193035468, 0.0247343174676, 0.0280848773878, 0.0323308476564, 0.0370394341409, 0.0456917721191, 0.0558762890594,
+            0.0576956187107, 0.0625325287017, 0.0591603758776, 0.0656650815128, 0.0678329011676, 0.0625142146389, 0.0548068448797, 0.0503893295063, 0.040209818868, 0.0374446988111,
+            0.0299661572042, 0.0272024759921, 0.0219328403791, 0.0179586571619, 0.0142926728247, 0.00839941654725, 0.00522366397213, 0.00224457976761, 0.000779274977993, 0.000197066585944,
+            7.16031761328e-05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 
+                                           };
+
+            vector<float> mc_vect;
+            vector<float> data_vect;
+
+
+            TFile *filepuest = new TFile(puRewFileName,"READ");
+            TH1F* npu_dat= (TH1F*) filepuest->Get("pileup");
+            //float n_integral_da = npu_dat->Integral();
+            //npu_dat->Scale(1./n_integral_da);
+
+            for( int i=0; i<60; ++i) {
+                mc_vect.push_back(Spring2016[i]);
+            }
+            for (int i=0; i<60; i++){
+                data_vect.push_back(npu_dat->GetBinContent(i+1));
+            }
+
+            LumiWeights = reweight::LumiReWeighting(mc_vect,data_vect);
+
         }
-        cout << "Before LumiWeight" << endl;
-      
-        LumiWeights = reweight::LumiReWeighting(mc_vect,data_vect);
-        cout << "After LumiWeight" << endl;
+        else {
+            vector<float> mc_vect;
+            vector<float> data_vect;
+            puweight=false;
+          
+            TFile * puFile = new TFile(puRewFileName);
+
+            //TFile *filepuest = new TFile("/home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/inclusiveQCD_ptBin15to300_star1_TrigPFjet40_Jet60_250_notPUReweighted_goldenJSON/inclusiveQCD_ptBin15to300_star1_TrigPFjet40_Jet60_250_notPUReweighted_goldenJSON.root");
+            //TFile *filepuest = new TFile("/home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/muEnQCD_ptBin20to300_star1_TrigDijet20_Jet60_250_notPUReweighted_goldenJSON/muEnQCD_ptBin20to300_star1_TrigDijet20_Jet60_250_notPUReweighted_goldenJSON.root");
+            TH1D* npu_mc= (TH1D*) puFile->Get("nPV_mc_unw");
+            //TH1D* npu_dat= (TH1D*) filepuest->Get("nPV_data");
+            TH1D* npu_dat= (TH1D*) puFile->Get("nPV_data");
+            cout << "Got file PU histo" << endl;
+            
+            float n_integral_mc = npu_mc->Integral();
+            float n_integral_da = npu_dat->Integral();
+            npu_mc->Scale(1./n_integral_mc);
+            npu_dat->Scale(1./n_integral_da);
+
+            for (int i=0; i<60; i++){
+                mc_vect.push_back(npu_mc->GetBinContent(i+1));
+                data_vect.push_back(npu_dat->GetBinContent(i+1));
+            }
+          
+            LumiWeights = reweight::LumiReWeighting(mc_vect,data_vect);
+        }
     }   
 
     cout << "Loop entered." << endl;
@@ -557,10 +586,10 @@ void CommPlotProducer::Loop(TString trigname, int trigger, float PtMin_Cut, floa
     TFile *myfile=new TFile(output_name+".root",      "recreate");
   
     // --------------------------------------Histograms declaration------------------------------------------------//   
-    TH1D* nPU_mc                  = new TH1D("nPU_mc",                "nPU_mc",                60,-0.5,59.5);
-    TH1D* nPV_data                = new TH1D("nPV_data",              "nPV_data",              60,-0.5,59.5);
-    TH1D* nPV_mc                  = new TH1D("nPV_mc",                "nPV_mc",                60,-0.5,59.5);
-    TH1D* nPV_mc_unw              = new TH1D("nPV_mc_unw",            "nPV_mc_unw",                60,-0.5,59.5);
+    TH1D* nPU_mc                  = new TH1D("nPU_mc",                "nPU_mc",                60,0,60);
+    TH1D* nPV_data                = new TH1D("nPV_data",              "nPV_data",              60,0,60);
+    TH1D* nPV_mc                  = new TH1D("nPV_mc",                "nPV_mc",                60,0,60);
+    TH1D* nPV_mc_unw              = new TH1D("nPV_mc_unw",            "nPV_mc_unw",                60,0,60);
     TH1D* pt_hat                  = new TH1D("pt_hat",                "pt_hat",                100,0,1000);
     TH1D* pt_hat_fin              = new TH1D("pt_hat_fin",            "pt_hat_fin",             100,0,1000);
     TH1D* jet_pt_mc               = new TH1D("jet_pt_mc",  	    "jet_pt_mc", 	     PtMax/10,0,PtMax );
@@ -902,7 +931,7 @@ void CommPlotProducer::Loop(TString trigname, int trigger, float PtMin_Cut, floa
         //-------------pile-up reweighting------------//  
         //--------------------------------------------//  
         //bool doPUreweighting = true;        
-        if (!isData && PUreweightingFileName != ""){
+        if (!isData && puRewFileName != ""){
           if (nPUtrue >=59) nPUtrue=59;     
           float WeightPU =1;
           if (puweight) {

@@ -95,8 +95,8 @@ Draw("pfelectron_eta","#bf{eta of electrons}",0);
 Draw("pfelectron_deltar","#bf{#Delta R(el,jet)}",0);
 Draw("pfelectron_ip"    ,      "#bf{IP of the electrons}",1);
 
-Draw("cTagCvsB", "#bf{C-tag CvsB Discriminator}", 1);
-Draw("cTagCvsL", "#bf{C-tag CvsL Discriminator}", 1);
-Draw("cTagCvsB", "#bf{C-tag CvsB Discriminator}", 0);
-Draw("cTagCvsL", "#bf{C-tag CvsL Discriminator}", 0);
+Draw("cTagCvsB", "Jets/0.04", "#bf{C-tag CvsB Discriminator}", 1);
+Draw("cTagCvsL", "Jets/0.04", "#bf{C-tag CvsL Discriminator}", 1);
+Draw("cTagCvsB", "Jets/0.04", "#bf{C-tag CvsB Discriminator}", 0);
+Draw("cTagCvsL", "Jets/0.04", "#bf{C-tag CvsL Discriminator}", 0);
 }

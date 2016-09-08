@@ -774,9 +774,10 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TChain *tree);
-   virtual void     Loop(int trigger, float PtMin_Cut, float PtMax_Cut, TString outputname);
+   //virtual void     Loop(int trigger, float PtMin_Cut, float PtMax_Cut, TString outputname);
+   virtual void     Loop(TString trigname, int trigger, float PtMin_Cut, float PtMax_Cut, TString output_name, TString puRewFileName = "", bool officalRecipe = false);
    //virtual void     Loop(TString trignam, int trigger, float PtMin_Cut, float PtMax_Cut, TString outputname);
-   virtual void     Loop(TString trignam, int trigger, float PtMin_Cut, float PtMax_Cut, TString outputname, TString PUreweightingFile = "");
+   //virtual void     Loop(TString trignam, int trigger, float PtMin_Cut, float PtMax_Cut, TString outputname, TString PUreweightingFile);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     AddHisto(TString name, TString title,  int nbins, float min, float max);

@@ -56,14 +56,21 @@ TString labelfile6="QCD 13TeV Pyth8 w/ PU";
 bool displayRatio = true;
 TString datacaption = "Data";
 
-TString format=".pdf"; // .png or .pdf or .gif
+TString format=".png"; // .png or .pdf or .gif
 //TString dir4plots="plots_804_25ns_pthat15_300_PFjet40_Jet50_250_PUReweighted_run_271036-273450";
 //TString filename = "runIISpring16AODSIM_v0_full_40_Plot50_250_pthat_15_470__withCTAG_PUrew/Pt15to300allhadded.root";
 //TString jettype="AK4 jets (50 < p_{T} < 250 GeV)" ;
-TString dir4plots="plots_804_25ns_pthat30_470_PFjet40_Jet50_250_PUReweighted_run_271036-273450_v5";
+//TString dir4plots="plots_804_25ns_pthat15_470_PFjet40_Jet60_250_nPVPUReweighted_JSONJul15_v0_HIP";
+//TString dir4plots="plots_804_25ns_pthat15_470_PFjet40_Jet60_250_nPVPUReweighted_PostICHEP_2016E_276812_278310_NewTrackSel";
+TString dir4plots="plots_804_25ns_pthat15_470_PFjet40_Jet60_250_nPVPUReweighted_dataPostTrackerHIPFIX_2016FG_278801onwards_OldTrackSel";
+//TString dir4plots="plots_804_25ns_pthat15_470_PFjet40_Jet60_250_officialPUReweighted_run_271036-275125_v0";
 //TString filename = "runIISpring16AODSIM_v1_full_40_Plot50_250_pthat_15_470_PUrew/hadded_30to470.root";
-TString filename = "runIISpring16AODSIM_v1_resubmit3_full_40_Plot50_250_pthat_15_470_PUrew/allhadded.root";
-TString jettype="AK4 jets (50 < p_{T} < 250 GeV)" ;
+//TString filename = "runIISpring16AODSIM_v1_resubmit3_full_40_Plot50_250_pthat_15_470_PUrew/allhadded.root";
+//TString filename = "runIISpring16MINIAOD_v3_HIP_full_40_Plot60_250_dataJul15_PURew_withnoHIP/allhadded.root";
+//TString filename = "runIISpring16MINIAOD_v3_full_40_Plot60_250_dataPostICHEP_2016E_276812_278310_PURew/allhadded.root";
+//TString filename = "runIISpring16MINIAOD_v3_full_40_Plot60_250_dataPostICHEP_2016E_276812_278310_PURew_NewTrackSel/allhadded.root";
+TString filename = "runIISpring16MINIAOD_v3_full_40_Plot60_250_dataPostTrackerHIPFIX_2016FG_278801onwards_PURew_oldTrackSel/allhadded.root";
+TString jettype="AK4 jets (60 < p_{T} < 250 GeV)" ;
 
 //TString dir4plots="plots_PFjet40_Jet60_250_"+PU+"PUReweighted_goldenJSON_goodFlavSplit_newJPCalib_fullLumi"; 
 //    TString jettype="AK4 jets (40 <p_{T}< 250 GeV)" ;
@@ -710,7 +717,7 @@ void Draw(TString name, TString ytitle, TString histotitle, bool log, float miny
   CMS_lumi( canvas_1, iPeriod, iPos );
 */
 //   TLatex *   tex = new TLatex(0.98,0.95125,"#sqrt{s}=13 TeV, 50ns");
-TLatex *   tex = new TLatex(0.98,0.95125,"0.6 fb^{-1}, #sqrt{s}=13 TeV, 2016");
+TLatex *   tex = new TLatex(0.98,0.95125,"- fb^{-1}, #sqrt{s}=13 TeV, 2016");
 tex->SetNDC();
    tex->SetTextAlign(31);
    tex->SetTextFont(42);

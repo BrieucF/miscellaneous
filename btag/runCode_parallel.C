@@ -11,7 +11,7 @@ using namespace std;
 // for Inclusive QCD pythia at 13TeV, provide : 
 //  -->  m.Fill_nevent(    0.,n15_30,n30_50,n50_80,n80_120,n120_170,n170-300,n300-470,n470-600,n600-800,n800-1000,n1000-inf);
 
-void runCode_parallel(TString charForChain, Int_t nFile, TString outFileName, bool isMuEn, Int_t TrigerPt, Int_t jetPtMin, Int_t jetPtMax, TString PUreweightingFile = ""){
+void runCode_parallel(TString charForChain, Int_t nFile, TString outFileName, bool isMuEn, Int_t TrigerPt, Int_t jetPtMin, Int_t jetPtMax, TString PUreweightingFile = "", bool officialPU = false){
     //TO DO if you change something in CommPlot : dans root gROOT->ProcessLine(".L /home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/CommPlotProducer.C++");
     //Be carefull to the CommPlotProducer you load !
     cout << "LOADING : /home/fynu/bfrancois/bTag/CMSSW_7_4_5/src/RecoBTag/PerformanceMeasurements/test/BTagAnalyzerMacros/CommPlotProducer_C.so" << endl;
@@ -42,7 +42,10 @@ void runCode_parallel(TString charForChain, Int_t nFile, TString outFileName, bo
     if(!isMuEn)
     {
         m.SetInfo("pythia",0,13);
-        m.Fill_nevent(0., 9944962., 9949423., 9912583., 3459760., 3458384., 6877100., 2818689., 3885763., 1964124., 3976116., 1487136.);   // Inclusive QCD, almost full stat, runIISpring16
+        //m.Fill_nevent(0., 9800608.,9930948.,9897538.,6986123.,6778942.,6914063.,5874780. , 3928855., 3869318., 3843252., 2999055.);   // Inclusive QCD runIISpring16_MiniAODv2 v3 HIP !!! up to 470 GeV it is ok after not! 
+        m.Fill_nevent(0., 9800608., 9930948., 9968391., 6986123., 6339488., 6914063., 5874780., 3928855., 3959746., 3883812., 2999055.);   // Inclusive QCD, almost full stat, runIISpring16_MiniAODv2 v3
+        //m.Fill_nevent(0., 9800608., 9930948., 9968391., 6986123., 6863805., 6914063., 5834181., 3928855., 3959746., 3797668., 2999055.);   // Inclusive QCD, almost full stat, runIISpring16_MiniAODv2 v2
+        //m.Fill_nevent(0., 9944962., 9949423., 9912583., 3459760., 3458384., 6877100., 2818689., 3885763., 1964124., 3976116., 1487136.);   // Inclusive QCD, almost full stat, runIISpring16
         //m.Fill_nevent(0., 38238558., 38425878., 9808010., 9775350., 6953583., 6848212., 6918735.,  5968947., 3977764., 3979873., 3973214.0);   // For full stat of files eos MC 25 ns Performance CMSSW_7_6_3 qcd inclusive
         //m.Fill_nevent(0., 38027914., 9788460., 9480963., 6111522., 6848212., 6054735., 5522805., 3961690., 3979873., 3973214., 2751549.);   // For full stat of files eos MC 25 ns CMSSW_7_6_1 qcd inclusive
         //m.Fill_nevent(0., 4959532., 4958023., 4983675., 3450292., 3458384., 3364365., 2935627., 1937537., 1964124., 1937216., 1540928.);   // For full stat of files eos MC 25 ns CMSSW_7_4_14 qcd inclusive
@@ -69,7 +72,7 @@ void runCode_parallel(TString charForChain, Int_t nFile, TString outFileName, bo
     cout << "6" << endl;
     //if (PUreweightingFile!= "") m.SetPV();   //It is now done inside the loop function, if the file is something else then ""
     TString name_root = outFileName; // "QCD_INC_13TeV_ptBin15to470_star1_TrigPFjet40_Jet60_300_PUReweighted_goldenJSON"; 
-    m.Loop(trigName, TrigerPt, jetPtMin, jetPtMax, name_root, PUreweightingFile);    
+    m.Loop(trigName, TrigerPt, jetPtMin, jetPtMax, name_root, PUreweightingFile, officialPU);    
 }
 
 
